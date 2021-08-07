@@ -3,6 +3,7 @@ import time
 import datetime
 
 from face import *
+from hour import *
 
 
 def split(frame):
@@ -17,16 +18,23 @@ while True:
     clockchar = split(clockstring)
 
     ctime = datetime.datetime.now()
-    hours = ctime.strftime("%H")
-    minutes = ctime.strftime("%M")
-    seconds = ctime.strftime("%S")
-    minute = ctime.strftime("%H:%M:%S")
+    hours = int(ctime.strftime("%H"))
+    minutes = int(ctime.strftime("%M"))
+    seconds = int(ctime.strftime("%S"))
+    #minute = int(ctime.strftime("%H:%M:%S"))
 
-    print(clockstring)
+    clockchar = sethour(hours, clockchar)
+
+    for val in clockchar: 
+        display += val 
+
+    print(display)
     print(hours)
     print(minutes)
     print(seconds)
     #print(clockchar[5])
+
+
 
     time.sleep(1)
     print("\033[H\033[J") 
