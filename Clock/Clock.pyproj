@@ -29,6 +29,12 @@
     <Compile Include="hour.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="minute.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="second.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
