@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+
+<body>
+    <div id="clock" class="font-mono"></div>></div>
+    <py-script output="clock">
+import os
+import time
+import datetime
+import asyncio
+
+def setface():
+    clockstring = ""
+    clockstring = clockstring + "   ~-------------~    \n"
+    clockstring = clockstring + " ('..'11..12..1'..')  \n"
+    clockstring = clockstring + "| :               : | \n"
+    clockstring = clockstring + "| :10            2: | \n"
+    clockstring = clockstring + "| :               : | \n"
+    clockstring = clockstring + "| :               : | \n"
+    clockstring = clockstring + "| :9      @      3: | \n"
+    clockstring = clockstring + "| :               : | \n"
+    clockstring = clockstring + "| :               : | \n"
+    clockstring = clockstring + "| :8             4: | \n"
+    clockstring = clockstring + "| :               : | \n"
+    clockstring = clockstring + " ('..'7...6...5'..')  \n"
+    clockstring = clockstring + "   ~-------------~    \n"
+	
+    return clockstring
+
+def setminute(minutes, clockchar):
+
+    if(minutes >= 55):
+        clockchar[52] = "M"
+        clockchar[76] = "\\"
+        clockchar[100] = "\\"
+
+    elif(minutes >= 50):
+        clockchar[73] = "M" 
+        clockchar[97] = "\\"
+        clockchar[122] = "\\"
+
+    elif(minutes >= 45):
+        clockchar[142] = "M"
+        clockchar[143] = "-"
+        clockchar[144] = "-" 
+        clockchar[145] = "-"
+
+    elif(minutes >= 40):
+        clockchar[211] = "M"
+        clockchar[189] = "/"
+        clockchar[168] = "/"
+
+    elif(minutes >= 35):
+         clockchar[236] = "M"
+         clockchar[214] = "/" 
+         clockchar[192] = "/" 
+
+    elif(minutes >= 30):
+        clockchar[240] = "M"
+        clockchar[217] = "|";
+        clockchar[194] = "|" 
+
+    elif(minutes >= 25):
+        clockchar[244] = "M" 
+        clockchar[220] = "\\" 
+        clockchar[196] = "\\"
+
+    elif(minutes >= 20):
+        clockchar[223] = "M"
+        clockchar[199] = "\\"
+        clockchar[174] = "\\"
+
+    elif(minutes >= 15):
+        clockchar[154] = "M"
+        clockchar[153] = "-"
+        clockchar[152] = "-"
+        clockchar[151] = "-"
+
+    elif(minutes >= 10):
+        clockchar[85] = "M"
+        clockchar[107] = "/"
+        clockchar[128] = "/"
+
+    elif(minutes >= 5):
+        clockchar[60] = "M"
+        clockchar[82] = "/"
+        clockchar[104] = "/"
+
+    elif(minutes >= 0):
+        clockchar[56] = "M"
+        clockchar[79] = "|"
+        clockchar[102] = "|" 
+
+    return clockchar
+	
+def sethour(hours, clockchar):
+
+    if (hours > 12):
+        hours -= 12
+    elif (hours == 0):
+        hours = 12
+
+    if (hours == 1):
+        clockchar[82] = "H" 
+        clockchar[104] = "/" 
+        
+    if (hours == 2):
+        clockchar[107] = "H" 
+        clockchar[128] = "/" 
+        
+    if (hours == 3):
+        clockchar[153] = "H" 
+        clockchar[152] = "-" 
+        clockchar[151] = "-"     
+        
+    if (hours == 4):
+        clockchar[199] = "H" 
+        clockchar[174] = "\\" 
+
+    if (hours == 5):
+        clockchar[220] = "H" 
+        clockchar[196] = "\\" 
+        
+    if (hours == 6):
+        clockchar[217] = "H" 
+        clockchar[194] = "|" 
+        
+    if (hours == 7):
+        clockchar[214] = "H" 
+        clockchar[192] = "/" 
+        
+    if (hours == 8):
+        clockchar[189] = "H" 
+        clockchar[168] = "/" 
+        
+    if (hours == 9):
+        clockchar[143] = "H" 
+        clockchar[144] = "-" 
+        clockchar[145] = "-" 
+        
+    if (hours == 10):
+        clockchar[97] = "H" 
+        clockchar[122] = "\\" 
+        
+    if (hours == 11):
+        clockchar[76] = "H" 
+        clockchar[100] = "\\" 
+        
+    if (hours == 12):
+        clockchar[79] = "H" 
+        clockchar[102] = "|" 
+
+    return clockchar
+
+def setsecond(seconds, minute, clockchar):
+     if (seconds % 2 == 0):
+
+        if (minute == 0):
+            clockchar[148] = "*"
+
+        elif (minute ==1):  
+            clockchar[37] = "*" 
+        
+        elif (minute ==2):
+            clockchar[86] = "*" 
+        
+        elif (minute ==3):       
+            clockchar[155] = "*"       
+
+        elif (minute ==4):       
+            clockchar[224] = "*"       
+
+        elif (minute ==5):       
+            clockchar[267] = "*"
+        
+        elif (minute ==6):       
+            clockchar[263] = "*"
+        
+        elif (minute ==7):       
+            clockchar[259] = "*"
+        
+        elif (minute ==8):       
+            clockchar[210] = "*" 
+        
+        elif (minute ==9):   
+            clockchar[141] = "*"
+     
+     return clockchar
+
+
+def split(frame):
+    return [char for char in frame]
+ 
+async def clock():
+	while True: 
+		clockchar = ""
+		clockstring = ""
+		display = ""
+
+		clockstring = setface()
+		clockchar = split(clockstring)
+
+		ctime = datetime.datetime.now()
+		hours = ctime.hour
+		minutes = ctime.minute
+		seconds = ctime.second
+		minute = minutes % 10
+
+		clockchar = sethour(hours, clockchar)
+		clockchar = setminute(minutes, clockchar)
+		clockchar = setsecond(seconds, minute, clockchar)
+
+		for val in clockchar: 
+			display += val 
+			
+		br = '<' + 'br' + '>'	
+		nbsp = '&' + 'nbsp' + ';' 
+		display = display.replace('\n', br)
+		display = display.replace(' ', nbsp)
+
+		clock = Element("clock")
+		clock.write(display)
+		await asyncio.sleep(1)
+		clock.clear()
+		
+pyscript.run_until_complete(clock())
+    </py-script>
+
+</body>
+
+</html>
