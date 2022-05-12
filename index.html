@@ -210,10 +210,10 @@ async def clock():
 		minutes = ctime.minute
 		seconds = ctime.second
 		minute = minutes % 10
-                
-                clockchar = setsecond(seconds, minute, clockchar)
-                clockchar = setminute(minutes, clockchar)
-                clockchar = sethour(hours, clockchar)		
+
+		clockchar = setsecond(seconds, minute, clockchar)
+		clockchar = setminute(minutes, clockchar)
+		clockchar = sethour(hours, clockchar)
 
 		for val in clockchar: 
 			display += val 
