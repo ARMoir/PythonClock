@@ -75,7 +75,9 @@ async def clock():
 		await asyncio.sleep(1)
 		clock.clear()
 
-pyscript.run_until_complete(asyncio.gather(clock()))
+if __name__ == "__main__":
+	#await asyncio.sleep(0.5)
+	pyscript.run_until_complete(asyncio.gather(clock()))
 </py-script>
 
 </body>
