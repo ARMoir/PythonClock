@@ -41,10 +41,10 @@ import datetime
 import asyncio
 
 def split(frame):
-    return [char for char in frame]
- 
+	return [char for char in frame]
+
 async def clock():
-	while True: 
+	while True:
 		clockchar = ""
 		clockstring = ""
 		display = ""
@@ -62,11 +62,11 @@ async def clock():
 		clockchar = setminute(minutes, clockchar)
 		clockchar = sethour(hours, clockchar)
 
-		for val in clockchar: 
-			display += val 
-			
-		br = '<' + 'br' + '>'	
-		nbsp = '&' + 'nbsp' + ';' 
+		for val in clockchar:
+			display += val
+
+		br = '<' + 'br' + '>'
+		nbsp = '&' + 'nbsp' + ';'
 		display = display.replace('\n', br)
 		display = display.replace(' ', nbsp)
 
@@ -74,9 +74,9 @@ async def clock():
 		clock.write(display)
 		await asyncio.sleep(1)
 		clock.clear()
-		
-pyscript.run_until_complete(clock())
-    </py-script>
+
+pyscript.run_until_complete(asyncio.gather(clock()))
+</py-script>
 
 </body>
 
