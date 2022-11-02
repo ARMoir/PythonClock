@@ -4,6 +4,18 @@
 <head>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+<style>
+    #clock {
+        position: absolute;
+        width: 100vw;
+        height: 100vh;
+        z-index: 15;
+        top: 25%;
+        left: 50%;
+        margin: -100px 0 0 -150px;
+        font-size: xx-large;
+    }
+</style>
 <py-env> 
 paths
 	https://raw.githubusercontent.com/ARMoir/PythonClock/master/face.py
@@ -19,7 +31,7 @@ paths
 <py-script src="https://raw.githubusercontent.com/ARMoir/PythonClock/master/minute.py"></py-script>
 <py-script src="https://raw.githubusercontent.com/ARMoir/PythonClock/master/second.py"></py-script>
 <pre>
-<div id="clock" class="font-mono" style="text-align: center; width: 100vw; height: 100vh;"></div>
+<div id="clock" class="font-mono"></div>
 </pre>
 	
 <py-script output="clock">
