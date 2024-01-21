@@ -16,13 +16,7 @@
         font-size: xx-large;
     }
 </style>
-<py-env> 
-paths
-	https://raw.githubusercontent.com/ARMoir/PythonClock/master/face.py
-	https://raw.githubusercontent.com/ARMoir/PythonClock/master/hour.py
-	https://raw.githubusercontent.com/ARMoir/PythonClock/master/minute.py
-	https://raw.githubusercontent.com/ARMoir/PythonClock/master/second.py
-</py-env>
+
 </head>
 
 <body>
@@ -41,43 +35,36 @@ import datetime
 import asyncio
 
 def split(frame):
-	return [char for char in frame]
+    return [char for char in frame]
 
 async def clock():
-	while True:
-		clockchar = ""
-		clockstring = ""
-		display = ""
+    while True:
+        clockchar = ""
+        clockstring = ""
+        display = ""
 
-		clockstring = setface()
-		clockchar = split(clockstring)
+        clockstring = setface()
+        clockchar = split(clockstring)
 
-		ctime = datetime.datetime.now()
-		hours = ctime.hour
-		minutes = ctime.minute
-		seconds = ctime.second
-		minute = minutes % 10
+        ctime = datetime.datetime.now()
+        hours = ctime.hour
+        minutes = ctime.minute
+        seconds = ctime.second
+        minute = minutes % 10
 
-		clockchar = setsecond(seconds, minute, clockchar)
-		clockchar = setminute(minutes, clockchar)
-		clockchar = sethour(hours, clockchar)
+        clockchar = setsecond(seconds, minute, clockchar)
+        clockchar = setminute(minutes, clockchar)
+        clockchar = sethour(hours, clockchar)
 
-		for val in clockchar:
-			display += val
+        for val in clockchar:
+            display += val
 
-		br = '<' + 'br' + '>'
-		nbsp = '&' + 'nbsp' + ';'
-		display = display.replace('\n', br)
-		display = display.replace(' ', nbsp)
+        clock = Element("clock")
+        clock.write(display)
+        await asyncio.sleep(1)
+        clock.clear()
 
-		clock = Element("clock")
-		clock.write(display)
-		await asyncio.sleep(1)
-		clock.clear()
-
-if __name__ == "__main__":
-	await asyncio.sleep(1)
-	pyscript.run_until_complete(asyncio.gather(clock()))
+asyncio.ensure_future(clock())
 </py-script>
 
 </body>
