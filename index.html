@@ -1,72 +1,85 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-<style>
-    #clock {
-        position: absolute;
-        width: 100vw;
-        height: 100vh;
-        z-index: 15;
-        top: 25%;
-        left: 50%;
-        margin: -100px 0 0 -150px;
-        font-size: xx-large;
-    }
-</style>
-
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.9.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.9.1/core.js"></script>
+    <style>
+        #clock {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            z-index: 15;
+            top: 25%;
+            left: 50%;
+            margin: -100px 0 0 -150px;
+            font-size: xx-large;
+        }
+    </style>
 </head>
-
 <body>
-<py-script src="https://raw.githubusercontent.com/ARMoir/PythonClock/master/face.py"></py-script>
-<py-script src="https://raw.githubusercontent.com/ARMoir/PythonClock/master/hour.py"></py-script>
-<py-script src="https://raw.githubusercontent.com/ARMoir/PythonClock/master/minute.py"></py-script>
-<py-script src="https://raw.githubusercontent.com/ARMoir/PythonClock/master/second.py"></py-script>
-<pre>
-<div id="clock" class="font-mono"></div>
-</pre>
-	
-<py-script output="clock">
-import os
-import time
-import datetime
+    <pre>
+        <div id="clock" class="font-mono"></div>
+    </pre>
+    <py-script>
+from pyscript import fetch
+import js
 import asyncio
+from pyodide.ffi import create_proxy, to_js
+
+async def load_and_execute_from_url(url):
+    response = await fetch(url)
+    if response.ok:
+        code = await response.text()
+        exec(code, globals())
+    else:
+        print(f"Failed to load code from {url}: {response.status}")
+
+async def main():
+    # Load functions from external scripts
+    await load_and_execute_from_url("https://raw.githubusercontent.com/ARMoir/PythonClock/master/face.py")
+    await load_and_execute_from_url("https://raw.githubusercontent.com/ARMoir/PythonClock/master/hour.py")
+    await load_and_execute_from_url("https://raw.githubusercontent.com/ARMoir/PythonClock/master/minute.py")
+    await load_and_execute_from_url("https://raw.githubusercontent.com/ARMoir/PythonClock/master/second.py")
+
+    # Now you can use functions defined in the loaded scripts
+    if all(func in globals() for func in ["setface", "sethour", "setminute", "setsecond"]):
+        async def clock():
+            while True:
+                clockchar = ""
+                clockstring = ""
+                display = ""
+
+                clockstring = setface()
+                clockchar = split(clockstring)
+
+                ctime = datetime.datetime.now()
+                hours = ctime.hour
+                minutes = ctime.minute
+                seconds = ctime.second
+                minute = minutes % 10
+
+                clockchar = setsecond(seconds, minute, clockchar)
+                clockchar = setminute(minutes, clockchar)
+                clockchar = sethour(hours, clockchar)
+
+                for val in clockchar:
+                    display += val
+
+                # Use JavaScript interop to update the HTML element
+                js_code = f"document.getElementById('clock').innerText = `{display}`;"
+                to_js(js_code)
+
+                await asyncio.sleep(1)
+
+        asyncio.ensure_future(clock())
+    else:
+        print("One or more functions failed to load.")
 
 def split(frame):
     return [char for char in frame]
 
-async def clock():
-    while True:
-        clockchar = ""
-        clockstring = ""
-        display = ""
-
-        clockstring = setface()
-        clockchar = split(clockstring)
-
-        ctime = datetime.datetime.now()
-        hours = ctime.hour
-        minutes = ctime.minute
-        seconds = ctime.second
-        minute = minutes % 10
-
-        clockchar = setsecond(seconds, minute, clockchar)
-        clockchar = setminute(minutes, clockchar)
-        clockchar = sethour(hours, clockchar)
-
-        for val in clockchar:
-            display += val
-
-        clock = Element("clock")
-        clock.write(display)
-        await asyncio.sleep(1)
-        clock.clear()
-
-asyncio.ensure_future(clock())
-</py-script>
-
+# Start the main function using create_proxy to avoid proxy destruction
+create_proxy(main)()
+    </py-script>
 </body>
-
 </html>
